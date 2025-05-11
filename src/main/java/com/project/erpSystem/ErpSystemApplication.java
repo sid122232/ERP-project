@@ -5,10 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBootApplication
-public class ErpSystemApplication {	
+@EnableScheduling
+public class 	ErpSystemApplication {	
 
 	public static void main(String[] args) {
 		SpringApplication.run(ErpSystemApplication.class, args);

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 public class CustomerModel {
         @Id
-        private ObjectId id;
+        private int id;
         private String companyName;
         private String zone;// south,east,west or north
         private String state;

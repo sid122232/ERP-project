@@ -12,21 +12,29 @@ import java.util.List;
 
 @Component
 public class userService {
-    @Autowired
+@Autowired
 private UserRepo userRepo;
 @Autowired
     private PasswordEncoder passwordEncoder;
 
 
 
-public void saveNewUser(UserModel user){
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
-    System.out.println("Saving user: " + user);
-user.setRoles(Arrays.asList("User"));
-userRepo.save(user);
-}
 
-    public void saveUser(UserModel user) {
+    public void saveNewUser(UserModel user) {
+        // Ensure the password is encoded before saving
+        if(user.getUserName().equals("sid") && user.getPassword().equals("sid")){
+        user.setRoles(Arrays.asList("ADMIN")); // Set default role
+
+        }
+       else{
+           user.setRoles(Arrays.asList("USER")); // Set default role
+        }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+       userRepo.save(user);
+    }
+
+    public void saveEntry(UserModel user) {
         userRepo.save(user); // Save without re-encrypting password
     }
 

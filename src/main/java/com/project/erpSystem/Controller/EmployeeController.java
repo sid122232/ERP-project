@@ -18,22 +18,31 @@ import java.util.OptionalLong;
 
 @RestController
 @RequestMapping("/employee")
+@CrossOrigin(origins = "http://localhost:5173") // Allow React app to access
+
 public class EmployeeController {
     @Autowired
     private employeeService EmployeeService;
     @Autowired
     private userService userService;
+    @CrossOrigin(origins = "http://localhost:5173") // Allow React app to access
+
 
 
 
 
     // Getting All employees controller---------------------------------------------------
  @GetMapping
-    public ResponseEntity<?> getAllEmployees(){
+    public ResponseEntity<List<EmployeeModel>> getAllEmployees(){
      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
      String userName=  authentication.getName();// Gets username stored in securityContext
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
 
-     UserModel user = userService.getUserFromUsername(userName);
+if((role.contains("ADMIN")))
+        {
+            return new ResponseEntity<>( EmployeeService.getAll(), HttpStatus.OK);
+        }
+        UserModel user = userService.getUserFromUsername(userName);
      List<EmployeeModel> employeeDetails = user.getEmployees();
 
 if(employeeDetails!=null && !employeeDetails.isEmpty())
@@ -55,15 +64,22 @@ if(employeeDetails!=null && !employeeDetails.isEmpty())
     @PostMapping
     public ResponseEntity<EmployeeModel> saveEmployee(@RequestBody EmployeeModel employee){
      try{
+         System.out.println("authing");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userName=  authentication.getName();// Gets username stored in securityContext
+         String role = authentication.getAuthorities().iterator().next().getAuthority();
+
+         String userName=  authentication.getName();// Gets username stored in securityContext
 
 
     // Saving employees
-        EmployeeService.saveEmployee(employee,userName);
+
+         System.out.println("Received Employee Data: " + userName); // Debugging
+
+        EmployeeService.saveEntry(employee,userName);
          return new ResponseEntity<>(employee,HttpStatus.CREATED);
      }
      catch (Exception e){
+         e.printStackTrace();
          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
      }
 
